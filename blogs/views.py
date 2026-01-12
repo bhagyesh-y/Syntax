@@ -1,14 +1,22 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+
+from testapp.models import About
 from .models import Category,Blog
 
 
 def Home(request):
     featured_posts=Blog.objects.filter(is_featured=True).order_by('updated_at')
     posts = Blog.objects.filter(is_featured=True,status='Published')
+    # Fetching about us 
+    try:
+        about = About.objects.get()
+    except:
+        about = None
     context={
         'featured_posts':featured_posts,
         'posts':posts,
+        'about':about,
     }
     return render(request,'home.html',context)
 
