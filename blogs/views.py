@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from testapp.models import About
 from .models import Category,Blog
 from django.db.models import Q
+from Syntax.forms import RegistrationForm
 
 
 def Home(request):
@@ -21,7 +22,7 @@ def Home(request):
     return render(request,'home.html',context)
 
 
-
+# view function for category
 def posts_by_category(request,category_id):
     # Fetch the post that belongs to the category with the id category_id
     posts = Blog.objects.filter(status="Published",category=category_id)
@@ -39,6 +40,8 @@ def posts_by_category(request,category_id):
     }
     return render(request,'posts_by_category.html',context)
 
+
+# view function for individual blog  
 def blogs (request,slug):
     single_blog = get_object_or_404(Blog,slug=slug, status = "Published")
     context={
@@ -46,6 +49,8 @@ def blogs (request,slug):
     }
     return render(request, 'blogs.html',context)
 
+
+# view function for search
 def search(request):
     keyword = request.GET.get('keyword')
     print("keyword==",keyword)
@@ -59,3 +64,18 @@ def search(request):
     return render(request,'search.html',context)
     
 
+# view function for register
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+           form.save()
+           return redirect('register')
+        else:
+            print(form.errors)
+    else :
+        form = RegistrationForm()
+    context={
+        'form':form,
+    }
+    return render (request,'register.html',context)
