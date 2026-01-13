@@ -26,15 +26,17 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.Home,name='home'),
     path('category/',include('blogs.urls')),
-    path('blogs/<slug:slug>/', views.blogs,name='blogs' ),
     # Search endpoints
     path('blogs/search/', views.search,name="search"),
+    path('blogs/<slug:slug>/', views.blogs,name='blogs' ),
     # Register form endpoint
     path('register/',views.register,name="register"),
     # Login endpoint
     path('login/',views.login , name='login'),
     # Logout endpoint
     path('logout/',views.logout,name='logout'),
+    # Dashboard endpoint 
+    path('dashboard/',include('dashboards.urls')),
     
     
     
