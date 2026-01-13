@@ -27,10 +27,14 @@ urlpatterns = [
     path('',views.Home,name='home'),
     path('category/',include('blogs.urls')),
     path('blogs/<slug:slug>/', views.blogs,name='blogs' ),
-    # search endpoints
+    # Search endpoints
     path('blogs/search/', views.search,name="search"),
-    # register form endpoint
+    # Register form endpoint
     path('register/',views.register,name="register"),
+    # Login endpoint
+    path('login/',views.login , name='login'),
+    # Logout endpoint
+    path('logout/',views.logout,name='logout'),
     
     
     

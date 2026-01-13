@@ -4,6 +4,8 @@ from testapp.models import About
 from .models import Category,Blog
 from django.db.models import Q
 from Syntax.forms import RegistrationForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import auth
 
 
 def Home(request):
@@ -79,3 +81,30 @@ def register(request):
         'form':form,
     }
     return render (request,'register.html',context)
+
+#  view function for login 
+def login(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request,request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            
+            user = auth.authenticate(username=username,password=password)
+            if user is not None:
+                auth.login(request,user)
+            return redirect ('home') 
+        
+    form = AuthenticationForm()
+    context={
+        'form':form,
+        
+    }
+    return render (request, 'login.html',context)
+
+
+# View function for logout
+def logout(request):
+    auth.logout(request)
+    return redirect ('home')
+    
