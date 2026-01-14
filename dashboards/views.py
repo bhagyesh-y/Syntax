@@ -50,7 +50,7 @@ def edit_category(request,pk):
 
 # View function for delete category
 def delete_category(request,pk):
-    category = Category.objects.get(pk=pk)
+    category = get_object_or_404(Category,pk)
     category.delete()
     return redirect ('categories')
 
@@ -85,3 +85,30 @@ def add_post(request):
             'form':form,
         }
     return render (request,'dashboard/add_post.html', context)
+
+# view function for editing blog
+
+def edit_post(request,pk):
+    post = get_object_or_404(Blog,pk = pk)
+    if request.method == 'POST':
+        form = BlogPostForm(request.POST,request.FILES,instance=post)
+        if form.is_valid():
+            post = form.save()
+            title = form.cleaned_data['title']
+            post.slug=slugify(title)+'-'+str(post.id)
+            post.save()
+            return redirect('posts')
+    form = BlogPostForm(instance=post)
+    context={
+        'form':form,
+        'post':post,
+    }
+    return render(request,'dashboard/edit_post.html',context)
+
+
+# view function for deleting the blog 
+def delete_post(request,pk):
+    post = get_object_or_404(Blog,pk=pk)
+    post.delete()
+    return redirect('posts')
+    

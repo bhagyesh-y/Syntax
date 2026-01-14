@@ -38,9 +38,13 @@
           <td>{{ post.is_featured}}</td>
           <td>{{ post.updated_at }}</td>
           <td>
-            <a href=""><i class="fa fa-edit text-success"></i></a>
+            <a href="{% url 'edit_post' post.id %}"
+              ><i class="fa fa-edit text-success"></i
+            ></a>
             &nbsp; &nbsp;
-            <a href=""> <i class="fa fa-trash text-danger"></i></a>
+            <a href="{% url 'delete_post' post.id %}">
+              <i class="fa fa-trash text-danger"></i
+            ></a>
           </td>
         </tr>
         {% endfor%}
