@@ -1,45 +1,127 @@
-{% extends 'base.html'%}
-
+{% extends 'base.html' %}
 {% block content %}
 
-<div class="row">
-    <!-- Left sidebar -->
+<style>
+    /* Reuse the design pattern from Posts */
+    .dashboard-wrapper {
+        padding: 20px 0;
+        background-color: #fcfcfc;
+    }
 
-    <!-- Load the side bar  -->
-    {% include 'dashboard/sidebar.html' %}
+    .content-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        border: none;
+    }
 
-    <!-- Right side content  -->
-    <div class="col-md-9">
-        <h2>All Categories</h2>
-        <a href="{% url 'add_category' %}" class="btn btn-dark text-light float-right mb-2">Add New</a>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Category Name</th>
-                    <th>Created_at</th>
-                    <th>Updated_at</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cat in categories%}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ cat }}</td>
-                    <td>{{ cat.created_at }}</td>
-                    <td>{{ cat.updated_at }}</td>
-                    <td>
-                        <a href="{% url 'edit_category' cat.id%}"><i class="fa fa-edit text-success"></i></a>
-                        &nbsp;
-                        &nbsp;
-                        <a href="{% url 'delete_category' cat.id %}"> <i class="fa fa-trash text-danger"></i></a>
-                    </td>
-                </tr>
-                {% endfor%}
-            </tbody>
-        </table>
+    .custom-table thead {
+        background-color: #212529;
+        color: #ffffff;
+    }
 
+    .custom-table th {
+        padding: 15px 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        border: none;
+    }
+
+    .custom-table td {
+        padding: 18px 20px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .action-link {
+        font-size: 1.1rem;
+        transition: transform 0.2s;
+        display: inline-block;
+        text-decoration: none;
+        padding: 5px;
+    }
+
+    .action-link:hover {
+        transform: scale(1.15);
+    }
+
+    /* Responsive Fix: Hide dates on small mobile to keep category names clear */
+    @media (max-width: 576px) {
+        .hide-mobile {
+            display: none;
+        }
+    }
+</style>
+
+<div class="container-fluid dashboard-wrapper">
+    <div class="row">
+        <div class="col-lg-3 col-md-4 mb-4">
+            {% include 'dashboard/sidebar.html' %}
+        </div>
+
+        <div class="col-lg-9 col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0 h4">
+                    All Categories
+                    <span class="text-muted fs-6 ms-1">({{ categories|length }})</span>
+                </h2>
+                <a href="{% url 'add_category' %}" class="btn btn-dark shadow-sm px-4">
+                    <i class="fa fa-plus-circle me-1"></i> Add New
+                </a>
+            </div>
+
+            <div class="content-card">
+                <div class="table-responsive">
+                    <table class="table table-hover custom-table mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">#</th>
+                                <th>Category Name</th>
+                                <th class="hide-mobile">Created At</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cat in categories %}
+                            <tr>
+                                <td class="text-muted">{{ forloop.counter }}</td>
+                                <td>
+                                    <div class="fw-bold text-dark">{{ cat }}</div>
+                                    <div class="d-block d-sm-none text-muted small">Updated: {{ cat.updated_at|date:"M
+                                        d, Y" }}</div>
+                                </td>
+                                <td class="hide-mobile">
+                                    <span class="text-secondary">{{ cat.created_at|date:"M d, Y" }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-4">
+                                        <a href="{% url 'edit_category' cat.id %}" class="action-link text-success"
+                                            title="Edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'delete_category' cat.id %}" class="action-link text-danger"
+                                            title="Delete"
+                                            onclick="return confirm('Delete this category? This might affect related posts.')">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">
+                                    No categories found. Start by adding one!
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

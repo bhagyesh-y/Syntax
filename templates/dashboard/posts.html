@@ -1,55 +1,204 @@
-{% extends 'base.html'%} {% block content %}
+{% extends 'base.html' %} {% block content %}
 
-<div class="row">
-  <!-- Left sidebar -->
+<style>
+  /* Dashboard Layout & Card */
+  .dashboard-wrapper {
+    padding: 20px 0;
+    background-color: #fcfcfc;
+  }
 
-  <!-- Load the side bar  -->
-  {% include 'dashboard/sidebar.html' %}
+  .content-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: none;
+  }
 
-  <!-- Right side content  -->
-  <div class="col-md-9">
-    <h2>All Posts</h2>
-    <a
-      href="{% url 'add_post' %}"
-      class="btn btn-dark text-light float-right mb-2"
-      >Add New</a
-    >
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Author</th>
-          <th>Status</th>
-          <th>Featured</th>
-          <th>Updated_at</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for post in posts%}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ post.title }}</td>
-          <td>{{ post.category}}</td>
-          <td>{{ post.author}}</td>
-          <td>{{ post.status}}</td>
-          <td>{{ post.is_featured}}</td>
-          <td>{{ post.updated_at }}</td>
-          <td>
-            <a href="{% url 'edit_post' post.id %}"
-              ><i class="fa fa-edit text-success"></i
-            ></a>
-            &nbsp; &nbsp;
-            <a href="{% url 'delete_post' post.id %}">
-              <i class="fa fa-trash text-danger"></i
-            ></a>
-          </td>
-        </tr>
-        {% endfor%}
-      </tbody>
-    </table>
+  /* Table Styling */
+  .custom-table thead {
+    background-color: #212529;
+    color: #ffffff;
+  }
+
+  .custom-table th {
+    padding: 15px 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border: none;
+  }
+
+  .custom-table td {
+    padding: 15px 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  /* Author Box Fix */
+  .author-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .author-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #f0f2f5;
+    color: #212529;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    border: 1px solid #dee2e6;
+  }
+
+  /* Status Badges */
+  .badge-status {
+    font-size: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 30px;
+    font-weight: 600;
+  }
+
+  /* Action Buttons Fix: Spacing & Hitbox */
+  .action-link {
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+    display: inline-block;
+    text-decoration: none;
+    padding: 5px; /* Increases clickable area */
+  }
+
+  .action-link:hover {
+    transform: scale(1.2);
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .hide-mobile {
+      display: none;
+    }
+    .custom-table th,
+    .custom-table td {
+      padding: 12px 10px;
+      font-size: 0.85rem;
+    }
+    .author-avatar {
+      display: none; /* Saves space on mobile */
+    }
+  }
+</style>
+
+<div class="container-fluid dashboard-wrapper">
+  <div class="row">
+    <div class="col-lg-3 col-md-4 mb-4">
+      {% include 'dashboard/sidebar.html' %}
+    </div>
+
+    <div class="col-lg-9 col-md-8">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0 h4">
+          All Posts
+          <span class="text-muted fs-6 ms-1">({{ posts|length }})</span>
+        </h2>
+        <a
+          href="{% url 'add_post' %}"
+          class="btn btn-dark shadow-sm px-3 btn-sm"
+        >
+          <i class="fa fa-plus-circle me-1"></i> Add New
+        </a>
+      </div>
+
+      <div class="content-card">
+        <div class="table-responsive">
+          <table class="table table-hover custom-table mb-0">
+            <thead>
+              <tr>
+                <th>Post Info</th>
+                <th class="hide-mobile">Category</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for post in posts %}
+              <tr>
+                <td>
+                  <div
+                    class="fw-bold text-dark text-truncate"
+                    style="max-width: 150px"
+                  >
+                    {{ post.title }}
+                  </div>
+                  <small class="text-muted" style="font-size: 0.7rem"
+                    >{{ post.updated_at|date:"M d, Y" }}</small
+                  >
+                </td>
+
+                <td class="hide-mobile">
+                  <span class="text-secondary small">{{ post.category }}</span>
+                </td>
+
+                <td>
+                  <div class="author-box">
+                    <div class="author-avatar">
+                      {{ post.author|slice:":1"|upper }}
+                    </div>
+                    <span class="text-dark small">{{ post.author }}</span>
+                  </div>
+                </td>
+
+                <td>
+                  {% if post.status == 'Published' or post.status == 'Live' %}
+                  <span class="badge bg-success badge-status text-white"
+                    >Live</span
+                  >
+                  {% else %}
+                  <span class="badge bg-warning text-dark badge-status"
+                    >Draft</span
+                  >
+                  {% endif %}
+                </td>
+
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-4">
+                    <a
+                      href="{% url 'edit_post' post.id %}"
+                      class="action-link text-success"
+                      title="Edit"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </a>
+                    <a
+                      href="{% url 'delete_post' post.id %}"
+                      class="action-link text-danger"
+                      title="Delete"
+                      onclick="return confirm('Delete this post?')"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center py-5 text-muted">
+                  No posts found.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

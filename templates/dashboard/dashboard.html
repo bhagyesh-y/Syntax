@@ -1,37 +1,116 @@
 {% extends 'base.html' %}
-
 {% block content %}
 
-<div class="row">
-    <!-- Left sidebar -->
+<style>
+    /* Consistency with Posts Page */
+    .dashboard-wrapper {
+        padding: 20px 0;
+        background-color: #fcfcfc;
+    }
 
-    <!-- load sidebar here  -->
-    {% include 'dashboard/sidebar.html' %}
+    .content-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: none;
+        transition: transform 0.2s ease;
+    }
 
-    <!-- Right side content  -->
-    <div class="col-md-9">
-        <span>Logged in as <b> {{user}}</b></span>
-        <div class="row">
-            <div class="col">
-                <div class="card border-default mb-3">
-                    <div class="card-header text-center text-uppercase font-weight-bold">All Categories</div>
-                    <div class="card-body text-dark">
-                        <h5 class="card-title text-center"> {{category_count}}</h5>
+    /* Stat Card Specifics */
+    .stat-card {
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-label {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        font-weight: 700;
+        color: #6c757d;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #212529;
+        margin: 0;
+    }
+
+    .user-badge {
+        background: #e9ecef;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        color: #495057;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .stat-value {
+            font-size: 1.8rem;
+        }
+
+        .mb-mobile-3 {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<div class="container-fluid dashboard-wrapper">
+    <div class="row">
+        <div class="col-lg-3 col-md-4 mb-4">
+            {% include 'dashboard/sidebar.html' %}
+        </div>
+
+        <div class="col-lg-9 col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h2 class="fw-bold m-0 h4">Dashboard Overview</h2>
+                <span class="user-badge">
+                    <i class="fa fa-user-circle me-1"></i> Logged in as <b>{{user}}</b>
+                </span>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-6 col-md-6">
+                    <div class="content-card stat-card">
+                        <span class="stat-label">All Categories</span>
+                        <h5 class="stat-value">{{category_count}}</h5>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-6">
+                    <div class="content-card stat-card">
+                        <span class="stat-label">All Posts</span>
+                        <h5 class="stat-value">{{blogs_count}}</h5>
                     </div>
                 </div>
             </div>
 
-            <div class="col">
-                <div class="card border-default mb-3">
-                    <div class="card-header text-center text-uppercase font-weight-bold">All Posts</div>
-                    <div class="card-body text-dark">
-                        <h5 class="card-title text-center"> {{blogs_count}}</h5>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="content-card p-4">
+                        <h5 class="fw-bold mb-3" style="font-size: 1rem;">Quick Actions</h5>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="{% url 'add_post' %}" class="btn btn-dark px-4 shadow-sm">
+                                <i class="fa fa-plus-circle me-2"></i> Create New Post
+                            </a>
+                            <a href="{% url 'posts' %}" class="btn btn-outline-dark px-4">
+                                <i class="fa fa-list me-2"></i> View All Posts
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
-
-{% endblock%}
+{% endblock %}
