@@ -135,6 +135,7 @@
     <div class="col-lg-9 col-md-8">
       <div class="table-card">
         <div class="table-header">
+          {% if perms.auth.view_user %}
           <h2 class="h4 font-weight-bold m-0">All Users</h2>
           <a href="{% url 'add_user'%}" class="btn btn-add shadow-sm">
             <i class="fa fa-user-plus mr-1"></i> Add New User
@@ -198,10 +199,10 @@
                 </td>
 
                 <td class="text-center action-icons">
-                  <a href="" title="Edit"
+                  <a href="{% url 'edit_user' user.id %}" title="Edit"
                     ><i class="fa fa-edit text-success"></i
                   ></a>
-                  <a href="" title="Delete"
+                  <a href="{% url 'delete_user' user.id%}" title="Delete"
                     ><i class="fa fa-trash text-danger"></i
                   ></a>
                 </td>
@@ -215,6 +216,9 @@
               {% endfor %}
             </tbody>
           </table>
+          {% else %}
+          <h5>You are not authorized to this view</h5>
+          {% endif %}
         </div>
       </div>
     </div>
