@@ -1,33 +1,97 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<style>
+  /* Section Header */
+  .category-header {
+    font-family: "Inter", sans-serif;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+  }
+  .category-header::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background: #eee;
+    margin-left: 20px;
+  }
 
-<!-- Banner Post -->
-{% block content %}
+  /* Category Post Cards */
+  .category-card {
+    background: #fff;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    height: auto !important; /* Fixed the stretching issue */
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  }
+  .category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+  }
+  .category-card h3 a {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    text-decoration: none;
+    color: #212529;
+    transition: color 0.2s;
+  }
+  .category-card h3 a:hover {
+    color: #ffc107;
+  }
 
+  /* Empty State */
+  .empty-state {
+    padding: 60px 20px;
+    text-align: center;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border: 2px dashed #ddd;
+  }
+</style>
 
-<!-- Featured posts  -->
-<h3 class="text-uppercase text-warning" style="letter-spacing : 2px;"> Category : {{category}}</h3>
-<div class="row mb-2">
-    {%if posts%}
-    {% for post in posts %}
-    <div class="col-md-6">
-        <div class="card border-0">
-            <div class="card-body">
-                <h3><a href="{% url 'blogs' post.slug %}" class="text-dark">{{post.title}}</a></h3>
-                <small class="mb-1 text-muted">{{post.created_at | timesince }} ago | {{post.author}}</small>
-                <p class="card-text">{{post.short_description | truncatewords:25}}</p>
-            </div>
+<div class="container mt-4">
+  <h3 class="category-header text-uppercase text-warning">
+    Category: <span class="text-dark ml-2">{{ category }}</span>
+  </h3>
+
+  <div class="row align-items-start">
+    {% if posts %} {% for post in posts %}
+    <div class="col-md-6 d-flex align-items-stretch">
+      <div class="card category-card p-4 w-100">
+        <div class="card-body p-0">
+          <h3><a href="{% url 'blogs' post.slug %}">{{ post.title }}</a></h3>
+          <p class="text-muted small mb-3">
+            <i class="fa fa-clock-o"></i> {{ post.created_at|timesince }} ago |
+            <i class="fa fa-user-o"></i> {{ post.author }}
+          </p>
+          <p class="card-text text-secondary">
+            {{ post.short_description|truncatewords:25 }}
+          </p>
+          <a
+            href="{% url 'blogs' post.slug %}"
+            class="text-warning font-weight-bold small text-uppercase"
+          >
+            Read Full Post <i class="fa fa-angle-right"></i>
+          </a>
         </div>
+      </div>
     </div>
-    {% endfor %}
-    {%else%}
-    <p>No posts found</p>
-    {%endif%}
+    {% endfor %} {% else %}
+    <div class="col-12">
+      <div class="empty-state">
+        <i class="fa fa-folder-open-o fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No posts found in this category.</h4>
+        <p class="text-secondary">
+          Check back later or explore other categories!
+        </p>
+        <a href="/" class="btn btn-warning mt-3">Back to Home</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
 </div>
-<!-- /.blog-main -->
 
-</div><!-- /.row -->
-
-</main><!-- /.container -->
-
-</div>
-{% endblock%}
+{% endblock %}

@@ -1,24 +1,107 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<style>
+  .search-header {
+    font-family: "Inter", sans-serif;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+  }
+  .search-header::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background: #eee;
+    margin-left: 20px;
+  }
 
-{% block content %}
+  .search-card {
+    background: #fff;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    height: auto !important; /* Prevents awkward stretching */
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  }
+  .search-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+  }
+  .search-card h3 a {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    text-decoration: none;
+    color: #212529;
+  }
+  .search-card h3 a:hover {
+    color: #ffc107;
+  }
 
-<h3 class="text-warning" style="letter-spacing : 2px;"> Search term: {{keyword}}</h3>
-<div class="row mb-2">
-    {% if blogs%}
-    {% for i in blogs %}
-    <div class="col-md-6">
-        <div class="card border-0">
-            <div class="card-body">
-                <h3><a href="{% url 'blogs' i.slug %}" class="text-dark">{{i.title}}</a></h3>
-                <small class="mb-1 text-muted">{{i.created_at | timesince }} ago | {{i.author}}</small>
-                <p class="card-text">{{i.short_description | truncatewords:25}}</p>
-            </div>
+  .no-results {
+    padding: 80px 20px;
+    text-align: center;
+    background: #fcfcfc;
+    border-radius: 15px;
+    border: 2px dashed #e9ecef;
+  }
+</style>
+
+<div class="container mt-4">
+  <h3 class="search-header text-uppercase text-warning">
+    Search Results: <span class="text-dark ml-2">"{{ keyword }}"</span>
+  </h3>
+
+  <div class="row align-items-start">
+    {% if blogs %} {% for i in blogs %}
+    <div class="col-md-6 d-flex align-items-stretch">
+      <div class="card search-card p-4 w-100">
+        <div class="card-body p-0">
+          {% if i.category %}
+          <small class="text-warning font-weight-bold text-uppercase"
+            >{{ i.category }}</small
+          >
+          {% endif %}
+
+          <h3 class="mt-1">
+            <a href="{% url 'blogs' i.slug %}">{{ i.title }}</a>
+          </h3>
+
+          <p class="text-muted small mb-3">
+            <i class="fa fa-clock-o"></i> {{ i.created_at|timesince }} ago |
+            <i class="fa fa-user-o"></i> {{ i.author }}
+          </p>
+
+          <p class="card-text text-secondary">
+            {{ i.short_description|truncatewords:25 }}
+          </p>
+
+          <a
+            href="{% url 'blogs' i.slug %}"
+            class="text-warning font-weight-bold small text-uppercase"
+          >
+            Read Full Story <i class="fa fa-angle-right"></i>
+          </a>
         </div>
+      </div>
     </div>
-    {% endfor %}
-    {%else%}
-    <p>No posts found</p>
-    {%endif%}
+    {% endfor %} {% else %}
+    <div class="col-12">
+      <div class="no-results shadow-sm">
+        <i class="fa fa-search fa-4x text-muted mb-4"></i>
+        <h2 class="h4 font-weight-bold text-dark">No matches found</h2>
+        <p class="text-secondary mx-auto" style="max-width: 400px">
+          We couldn't find any articles for <strong>"{{ keyword }}"</strong>.
+          Try checking your spelling or using more general keywords.
+        </p>
+        <a href="/" class="btn btn-warning mt-4 px-4 font-weight-bold">
+          Return to Homepage
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
 </div>
 
-{% endblock%}
+{% endblock %}
