@@ -1,45 +1,224 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="row">
-  {% include 'dashboard/sidebar.html' %}
-  <div class="col-md-9">
-    <h2>All Users</h2>
-    <a href="" class="btn btn-dark text-light float-right mb-2"> Add New</a>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Full Name</th>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Active</th>
-          <th>Staff</th>
-          <th>Superuser</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users%}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          <td>{{user.first_name}}{{user.last_name}}</td>
-          <td>{{user.username}}</td>
-          <td>{{user.email}}</td>
-          <td>{% if user.is_active %}<i class="fa fa-check text-success">
-            {%else%}<i class="fa fa-times text-danger">{% endif%}</td>
-          <td>{% if user.is_staff %}<i class="fa fa-check text-success">
-            {%else%}<i class="fa fa-times text-danger">{% endif%}</td>
-           <td>{% if user.is_superuser %}<i class="fa fa-check text-success">
-            {%else%}<i class="fa fa-times text-danger">{% endif%}</td>
-          <td>
-            <a href=""><i class="fa fa-edit text-success"></i></a>
-            &nbsp;
-            <a href=""><i class="fa fa-trash text-danger"></i></a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<style>
+  .dashboard-wrapper {
+    padding: 20px 0;
+  }
+
+  .table-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+    border: none;
+    overflow: hidden;
+    /* Keeps the card clean */
+  }
+
+  .table-header {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allows wrapping on mobile */
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #ffc107;
+    padding-bottom: 15px;
+    gap: 15px;
+  }
+
+  /* Table Container for Horizontal Scrolling on Mobile */
+  .table-responsive-custom {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table thead th {
+    border: none;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    padding: 12px 15px;
+    white-space: nowrap;
+    /* Prevents text from breaking */
+  }
+
+  .table tbody td {
+    vertical-align: middle;
+    padding: 12px 15px;
+    font-size: 0.85rem;
+    color: #495057;
+    white-space: nowrap;
+    /* Ensures columns stay in line */
+  }
+
+  /* Desktop adjustments to prevent wide gaps */
+  @media (min-width: 992px) {
+    .table {
+      table-layout: fixed;
+      /* Forces standard width on desktop */
+      width: 100%;
+    }
+
+    .col-id {
+      width: 5%;
+    }
+
+    .col-name {
+      width: 20%;
+    }
+
+    .col-user {
+      width: 15%;
+    }
+
+    .col-email {
+      width: 25%;
+    }
+
+    .col-status {
+      width: 10%;
+    }
+
+    .col-action {
+      width: 10%;
+    }
+  }
+
+  .status-icon {
+    font-size: 1.1rem;
+  }
+
+  .btn-add {
+    background-color: #212529;
+    color: #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 8px 18px;
+    white-space: nowrap;
+  }
+
+  .action-icons a {
+    display: inline-block;
+    padding: 0 5px;
+  }
+
+  /* Mobile Hint */
+  .scroll-hint {
+    display: none;
+    font-size: 0.7rem;
+    color: #adb5bd;
+    margin-bottom: 5px;
+    text-align: right;
+  }
+
+  @media (max-width: 768px) {
+    .scroll-hint {
+      display: block;
+    }
+
+    .table-card {
+      padding: 15px;
+    }
+  }
+</style>
+
+<div class="container-fluid dashboard-wrapper">
+  <div class="row">
+    <div class="col-lg-3 col-md-4 mb-4">
+      {% include 'dashboard/sidebar.html' %}
+    </div>
+
+    <div class="col-lg-9 col-md-8">
+      <div class="table-card">
+        <div class="table-header">
+          <h2 class="h4 font-weight-bold m-0">All Users</h2>
+          <a href="{% url 'add_user'%}" class="btn btn-add shadow-sm">
+            <i class="fa fa-user-plus mr-1"></i> Add New User
+          </a>
+        </div>
+
+        <p class="scroll-hint">
+          <i class="fa fa-arrows-h"></i> Swipe left to see more
+        </p>
+
+        <div class="table-responsive-custom">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th class="col-id">#</th>
+                <th class="col-name">Full Name</th>
+                <th class="col-user">Username</th>
+                <th class="col-email">Email</th>
+                <th class="col-status text-center">Active</th>
+                <th class="col-status text-center">Staff</th>
+                <th class="col-status text-center">Super</th>
+                <th class="col-action text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td class="text-muted">{{ forloop.counter }}</td>
+                <td class="font-weight-bold">
+                  {{ user.first_name }} {{ user.last_name }}
+                </td>
+                <td>
+                  <span class="badge badge-light border"
+                    >{{ user.username }}</span
+                  >
+                </td>
+                <td>{{ user.email }}</td>
+
+                <td class="text-center">
+                  {% if user.is_active %}
+                  <i class="fa fa-check-circle text-success status-icon"></i>
+                  {% else %}
+                  <i class="fa fa-times-circle text-danger status-icon"></i>
+                  {% endif %}
+                </td>
+
+                <td class="text-center">
+                  {% if user.is_staff %}
+                  <i class="fa fa-shield text-success status-icon"></i>
+                  {% else %}
+                  <i class="fa fa-circle-o text-muted opacity-50"></i>
+                  {% endif %}
+                </td>
+
+                <td class="text-center">
+                  {% if user.is_superuser %}
+                  <i class="fa fa-star text-warning status-icon"></i>
+                  {% else %}
+                  <i class="fa fa-circle-o text-muted opacity-50"></i>
+                  {% endif %}
+                </td>
+
+                <td class="text-center action-icons">
+                  <a href="" title="Edit"
+                    ><i class="fa fa-edit text-success"></i
+                  ></a>
+                  <a href="" title="Delete"
+                    ><i class="fa fa-trash text-danger"></i
+                  ></a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8" class="text-center py-4 text-muted">
+                  No users found.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-{% endblock%}
+
+{% endblock %}

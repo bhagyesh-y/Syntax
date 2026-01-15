@@ -4,6 +4,10 @@ from django.contrib.auth.decorators import login_required
 from dashboards.forms import CategoryForm , BlogPostForm
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
+from dashboards.forms import UserForm
+
+
+
 
 # view function for dashboard
 @login_required(login_url='login')
@@ -120,3 +124,11 @@ def users(request):
         'users':users
     }
     return render(request,'dashboard/users.html',context)
+
+# view function for adding new user
+def add_user(request):
+    form = UserForm()
+    context={
+        'form':form,
+    }
+    return render(request,'dashboard/add_user.html',context)

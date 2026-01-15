@@ -67,11 +67,11 @@
             class="sidebar-link {% if request.path == '/dashboard/' %}active-link{% endif %}">
             <i class="fa fa-th-large"></i> Dashboard
         </a>
-
+        {% if perms.auth.view_user%}
         <a href="{% url 'users' %}" class="sidebar-link {% if '/users/' in request.path %}active-link{% endif %}">
             <i class="fa fa-users"></i> Users
         </a>
-
+        {% endif%}
 
         <a href="{% url 'categories' %}"
             class="sidebar-link {% if '/categories/' in request.path %}active-link{% endif %}">
