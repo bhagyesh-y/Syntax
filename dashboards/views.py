@@ -55,7 +55,7 @@ def edit_category(request,pk):
 
 # View function for delete category
 def delete_category(request,pk):
-    category = get_object_or_404(Category,pk)
+    category = get_object_or_404(Category,pk=pk)
     category.delete()
     return redirect ('categories')
 

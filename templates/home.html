@@ -14,11 +14,9 @@
   }
 
   .hero-overlay {
-    background: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0.8) 30%,
-      rgba(0, 0, 0, 0.2)
-    );
+    background: linear-gradient(to right,
+        rgba(0, 0, 0, 0.8) 30%,
+        rgba(0, 0, 0, 0.2));
     width: 100%;
     height: 100%;
     position: absolute;
@@ -50,6 +48,7 @@
     display: flex;
     align-items: center;
   }
+
   .section-title::after {
     content: "";
     flex: 1;
@@ -66,10 +65,12 @@
     border: none;
     height: 100%;
   }
+
   .home-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
   }
+
   .home-card h3 a {
     font-family: "Playfair Display", serif;
     font-weight: 700;
@@ -77,6 +78,7 @@
     color: #212529;
     transition: color 0.2s;
   }
+
   .home-card h3 a:hover {
     color: #ffc107;
   }
@@ -94,20 +96,25 @@
     .hero-content {
       padding: 30px;
     }
+
     .hero-content h1 {
       font-size: 2rem;
     }
+
     .hero-banner {
       min-height: 300px;
     }
   }
+
   .home-card {
     background: #fff;
     border-radius: 12px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: none;
-    height: auto !important; /* Change this from 100% to auto */
-    margin-bottom: 25px; /* Adds consistent spacing between cards */
+    height: auto !important;
+    /* Change this from 100% to auto */
+    margin-bottom: 25px;
+    /* Adds consistent spacing between cards */
   }
 
   .blog-main {
@@ -118,31 +125,96 @@
     display: flex;
     align-items: flex-start;
   }
+
+  .category-nav-wrapper {
+    background: #ffffff;
+    border-bottom: 2px solid #f8f9fa;
+    margin: -20px 0 40px 0;
+    /* Adjusts for base container padding */
+    padding: 15px 0;
+  }
+
+  /* 2. Desktop: Equally Spaced Links */
+  .category-flex-container {
+    display: flex;
+    justify-content: space-between;
+    /* Spreads them equally across the width */
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .category-link {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #212529;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+  }
+
+  .category-link:hover {
+    color: #ffc107;
+    text-decoration: none;
+  }
+
+  /* 3. Mobile Handling: Smooth Swipe Scroll */
+  @media (max-width: 991px) {
+    .category-flex-container {
+      justify-content: flex-start;
+      overflow-x: auto;
+      /* Enables horizontal swipe */
+      white-space: nowrap;
+      /* Keeps items on one line */
+      -webkit-overflow-scrolling: touch;
+      gap: 30px;
+      /* Space between swipable items */
+      padding: 5px 15px;
+    }
+
+    /* Hiding scrollbar for modern app-like feel */
+    .category-flex-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-nav-wrapper {
+      margin-top: -10px;
+    }
+  }
 </style>
 
-{% for post in featured_posts %} {% if forloop.first %}
-<div
-  class="hero-banner mb-5"
-  style="background: url('{{ post.featured_image.url }}') center/cover no-repeat;"
->
+<div class="category-nav-wrapper">
+  <ul class="category-flex-container">
+    {% for cat in categories %}
+    <li class="category-item mt-4">
+      <a href="{% url 'posts_by_category' cat.id %}" class="category-link">
+        {{ cat.category_name }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% for post in featured_posts %}
+{% if forloop.first %}
+<div class="hero-banner mb-5" style="background: url('{{ post.featured_image.url }}') center/cover no-repeat;">
   <div class="hero-overlay"></div>
   <div class="hero-content col-md-8">
-    <span class="badge badge-warning mb-3 px-3 py-2 text-dark font-weight-bold"
-      >FEATURED</span
-    >
+    <span class="badge badge-warning mb-3 px-3 py-2 text-dark font-weight-bold">FEATURED</span>
     <h1>{{post.title}}</h1>
     <p class="lead text-light opacity-75">
       {{post.short_description|truncatewords:20}}
     </p>
-    <a
-      href="{% url 'blogs' post.slug %}"
-      class="btn btn-warning btn-lg font-weight-bold px-4 mt-2"
-    >
+    <a href="{% url 'blogs' post.slug %}" class="btn btn-warning btn-lg font-weight-bold px-4 mt-2">
       Read Story <i class="fa fa-arrow-right ml-2"></i>
     </a>
   </div>
 </div>
-{% endif %} {% endfor %}
+{% endif %}
+{% endfor %}
 
 <div class="container p-0">
   <h5 class="section-title text-uppercase text-warning">More Featured</h5>
@@ -151,11 +223,8 @@
     <div class="col-md-6 mb-4">
       <div class="card home-card p-4">
         <div class="card-body p-0">
-          <small
-            class="text-warning font-weight-bold text-uppercase"
-            style="font-size: 0.7rem"
-            >{{ post.category }}</small
-          >
+          <small class="text-warning font-weight-bold text-uppercase" style="font-size: 0.7rem">
+            {{ post.category }}</small>
           <h3 class="mt-2">
             <a href="{% url 'blogs' post.slug %}">{{post.title}}</a>
           </h3>
@@ -179,20 +248,11 @@
         </h5>
 
         {% for post in posts %}
-        <div
-          class="card home-card mb-4 p-4 shadow-sm border-0"
-          style="border-radius: 12px"
-        >
+        <div class="card home-card mb-4 p-4 shadow-sm border-0" style="border-radius: 12px">
           <div class="card-body p-0">
-            <small class="text-warning font-weight-bold"
-              >{{ post.category }}</small
-            >
+            <small class="text-warning font-weight-bold">{{ post.category }}</small>
             <h3 class="mt-2">
-              <a
-                href="{% url 'blogs' post.slug %}"
-                class="text-dark font-weight-bold"
-                >{{post.title}}</a
-              >
+              <a href="{% url 'blogs' post.slug %}" class="text-dark font-weight-bold">{{post.title}}</a>
             </h3>
             <p class="text-muted small mb-3">
               <i class="fa fa-clock-o"></i> {{post.created_at | timesince }} ago
@@ -201,10 +261,7 @@
             <p class="card-text text-secondary">
               {{post.short_description|truncatewords:30}}
             </p>
-            <a
-              href="{% url 'blogs' post.slug %}"
-              class="btn btn-sm btn-outline-warning font-weight-bold px-3"
-            >
+            <a href="{% url 'blogs' post.slug %}" class="btn btn-sm btn-outline-warning font-weight-bold px-3">
               READ FULL POST <i class="fa fa-angle-right"></i>
             </a>
           </div>
@@ -217,14 +274,8 @@
       </div>
 
       <div class="col-lg-4">
-        <div
-          class="sidebar-widget mb-4 p-4 bg-white shadow-sm"
-          style="border-radius: 12px"
-        >
-          <h5
-            class="font-weight-bold border-bottom pb-2 mb-3"
-            style="font-family: 'Playfair Display', serif"
-          >
+        <div class="sidebar-widget mb-4 p-4 bg-white shadow-sm" style="border-radius: 12px">
+          <h5 class="font-weight-bold border-bottom pb-2 mb-3" style="font-family: 'Playfair Display', serif">
             About Syntax
           </h5>
           <p class="text-muted small">
@@ -234,23 +285,13 @@
         </div>
 
         {% if social_links %}
-        <div
-          class="sidebar-widget p-4 bg-white shadow-sm"
-          style="border-radius: 12px"
-        >
-          <h5
-            class="font-weight-bold border-bottom pb-2 mb-3"
-            style="font-family: 'Playfair Display', serif"
-          >
+        <div class="sidebar-widget p-4 bg-white shadow-sm" style="border-radius: 12px">
+          <h5 class="font-weight-bold border-bottom pb-2 mb-3" style="font-family: 'Playfair Display', serif">
             Stay Connected
           </h5>
           <div class="d-flex flex-wrap">
             {% for i in social_links %}
-            <a
-              href="{{i.link}}"
-              target="blank"
-              class="btn btn-sm btn-outline-dark mr-2 mb-2"
-            >
+            <a href="{{i.link}}" target="blank" class="btn btn-sm btn-outline-dark mr-2 mb-2">
               <i class="fa fa-{{ i.platform|lower }} mr-1"></i> {{ i.platform }}
             </a>
             {% endfor %}

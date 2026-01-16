@@ -3,16 +3,16 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Syntax | Blog & Dashboard</title>
 
-    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900|Inter:400,500,600,700"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="{% static 'css/home.css' %}" rel="stylesheet" />
 
     <style>
         :root {
@@ -22,7 +22,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: "Inter", sans-serif;
             background-color: #fcfcfc;
             color: #333;
         }
@@ -62,7 +62,7 @@
 
         .breadcrumb-item+.breadcrumb-item::before {
             content: "\f105";
-            font-family: 'FontAwesome';
+            font-family: "FontAwesome";
             color: #ccc;
         }
 
@@ -129,7 +129,7 @@
                     <form action="{% url 'search' %}" method="GET">
                         <div class="input-group">
                             <input type="text" name="keyword" value="{{keyword}}" class="form-control"
-                                placeholder="Search articles..." aria-label="Search">
+                                placeholder="Search articles..." aria-label="Search" />
                             <div class="input-group-append">
                                 <button class="btn btn-warning" type="submit">Go!</button>
                             </div>
@@ -151,6 +151,7 @@
     </header>
 
     <div class="container">
+        {% comment %}
         <div class="nav-scroller py-1 mb-3">
             <nav class="nav d-flex justify-content-start">
                 {% for cat in categories %}
@@ -158,37 +159,40 @@
                 {% endfor %}
             </nav>
         </div>
-
-        {% if user.is_authenticated %}
+        {% endcomment %} {% if user.is_authenticated %}
         {% if '/dashboard/' in request.path or '/posts/' in request.path or '/categories/' in request.path %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-nav">
-                <li class="breadcrumb-item"><a href="/"><i class="fa fa-home"></i></a></li>
+                <li class="breadcrumb-item">
+                    <a href="/"><i class="fa fa-home"></i></a>
+                </li>
 
                 {% if request.path == '/dashboard/' %}
                 <li class="breadcrumb-item active">Dashboard Overview</li>
                 {% elif '/posts/' in request.path %}
-                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                </li>
                 <li class="breadcrumb-item active">All Posts</li>
                 {% elif '/categories/' in request.path %}
-                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                </li>
                 <li class="breadcrumb-item active">Categories</li>
                 {% endif %}
             </ol>
         </nav>
-        {% endif %}
-        {% endif %}
+        {% endif %} {% endif %}
 
-        <main role="main" class="pb-5">
-            {% block content %}
-            {% endblock %}
-        </main>
+        <main role="main" class="pb-5">{% block content %} {% endblock %}</main>
     </div>
 
     <footer class="blog-footer">
         <div class="container">
-            <p class="mb-0">Syntax built with <i class="fa fa-heart text-danger"></i> by <a href="#"
-                    class="text-dark font-weight-bold">Bhagyesh</a></p>
+            <p class="mb-0">
+                Syntax built with <i class="fa fa-heart text-danger"></i> by
+                <a href="#" class="text-dark font-weight-bold">Bhagyesh</a>
+            </p>
             <p class="small text-muted mt-2">&copy; 2026 Syntax Media Group</p>
         </div>
     </footer>
