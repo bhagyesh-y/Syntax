@@ -129,7 +129,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = '/media/'
-MEDAI_ROOT = BASE_DIR /'media'
+MEDIA_ROOT = BASE_DIR /'media'
 
 # Default template pack for django crispy form
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
