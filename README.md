@@ -1,6 +1,6 @@
 # Syntax - Django Web Application
 
-A full-stack web application built with Django, featuring a clean UI designed with Bootstrap and custom CSS. This project is currently live and deployed on PythonAnywhere.
+A full-stack bloging web application built with Django, featuring a clean UI designed with Bootstrap and custom CSS. This project is currently live and deployed on PythonAnywhere.
 
 **Live Demo:** [https://bhagyeshy.pythonanywhere.com](https://bhagyeshy.pythonanywhere.com)
 
